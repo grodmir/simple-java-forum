@@ -32,9 +32,9 @@
 
 2. **Используемые технологии:**
     - Jakarta EE:
-        - Servlets, JSP для фронтенда.
+        - Servlets
+        - JSP для фронтенда.
         - JPA для работы с базой данных.
-        - JAX-RS для REST API.
     - PostgreSQL для хранения данных.
     - Slf4j, logback и Lombok для логгирования
 
