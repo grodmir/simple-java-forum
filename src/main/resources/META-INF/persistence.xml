@@ -6,6 +6,8 @@
         <!-- Тут будут располагаться все классы помеченные аннотацией Entity -->
         <class>org.example.simplejavaforum.model.User</class>
         <class>org.example.simplejavaforum.model.Topic</class>
+        <class>org.example.simplejavaforum.model.Comment</class>
+        <class>org.example.simplejavaforum.model.Notification</class>
         <!-- До сюда -->
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
