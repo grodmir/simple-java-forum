@@ -3,21 +3,80 @@ package org.example.simplejavaforum.dao;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.example.simplejavaforum.model.User;
+import org.example.simplejavaforum.model.UserRole;
 import org.example.simplejavaforum.util.JpaUtil;
+
+import java.util.List;
 
 @Slf4j
 public class UserDao {
+
+    public User findById(Long id) {
+        try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
+            return em.find(User.class, id);
+        }
+    }
+
+    public List<User> findAll() {
+        try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
+            return em.createQuery("SELECT u FROM User u", User.class).getResultList();
+        }
+    }
+
+    public User findByUsername(String username) {
+        try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
+            return em.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class)
+                    .setParameter("username", username)
+                    .getSingleResult();
+        } catch (Exception e) {
+            log.error("User not found with username {}: {}", username, e.getMessage());
+            return null;
+        }
+    }
+
+    public List<User> findByRole(UserRole role) {
+        try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
+            return em.createQuery("SELECT u FROM User u WHERE u.role = :role", User.class)
+                    .setParameter("role", role)
+                    .getResultList();
+        }
+    }
 
     public void save(User user) {
         EntityManager em = JpaUtil.getInstance().getEntityManager();
         try {
             em.getTransaction().begin();
-            em.persist(user);
+            if (user.getId() == null) {
+                em.persist(user);
+                log.info("User created: {}", user.getUsername());
+            } else {
+                em.merge(user); // Update
+                log.info("User updated: {}", user.getUsername());
+            }
             em.getTransaction().commit();
-            log.info("User saved: " + user.toString());
         } catch (Exception e) {
+            log.error("Error saving user: {}", e.getMessage());
             em.getTransaction().rollback();
-            log.error("Saving user failed: {}", e.getMessage());
+        } finally {
+            em.close();
+        }
+    }
+
+    public void delete(Long id) {
+        EntityManager em = JpaUtil.getInstance().getEntityManager();
+        try {
+            em.getTransaction().begin();
+            User user = em.find(User.class, id);
+            if (user != null) {
+                em.remove(user);
+                log.info("User deleted: {}", user.getUsername());
+            } else {
+                log.warn("User with id {} not found", id);
+            }
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            log.error("Error deleting user: {}", e.getMessage());
+            em.getTransaction().rollback();
         } finally {
             em.close();
         }
