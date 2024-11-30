@@ -31,10 +31,10 @@ public class CommentDao {
         }
     }
 
-    public List<Comment> findByUserId(Long userId) {
+    public List<Comment> findByAuthorId(Long authorId) {
         try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
-            return em.createQuery("SELECT c FROM Comment c WHERE c.user.id = :userId ORDER BY c.createdAt ASC", Comment.class)
-                    .setParameter("userId", userId)
+            return em.createQuery("SELECT c FROM Comment c WHERE c.author.id = :userId ORDER BY c.createdAt ASC", Comment.class)
+                    .setParameter("userId", authorId)
                     .getResultList();
         }
     }

@@ -3,7 +3,6 @@ package org.example.simplejavaforum.dao;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.example.simplejavaforum.model.User;
-import org.example.simplejavaforum.model.UserRole;
 import org.example.simplejavaforum.util.JpaUtil;
 
 import java.util.List;
@@ -34,7 +33,12 @@ public class UserDao {
         }
     }
 
-    public List<User> findByRole(UserRole role) {
+    public List<User> findByRole(String role) {
+        if (!isRoleValid(role)) {
+            log.warn("Invalid role provided: {}", role);
+            return List.of();
+        }
+
         try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
             return em.createQuery("SELECT u FROM User u WHERE u.role = :role", User.class)
                     .setParameter("role", role)
@@ -43,6 +47,11 @@ public class UserDao {
     }
 
     public void save(User user) {
+        if(!isRoleValid(user.getRole())) {
+            log.warn("Invalid role provided: {}", user.getRole());
+            throw new IllegalArgumentException("Invalid role provided: " + user.getRole());
+        }
+
         EntityManager em = JpaUtil.getInstance().getEntityManager();
         try {
             em.getTransaction().begin();
@@ -80,5 +89,9 @@ public class UserDao {
         } finally {
             em.close();
         }
+    }
+
+    private boolean isRoleValid(String role) {
+        return role.equalsIgnoreCase("user") || role.equalsIgnoreCase("moderator");
     }
 }

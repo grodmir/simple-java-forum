@@ -21,9 +21,8 @@ public class User {
     @Column(nullable = false, length = 255)
     private String password_hash;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, columnDefinition = "user_role DEFAULT 'user'")
-    private UserRole role = UserRole.USER;
+    @Column(nullable = false, length = 50)
+    private String role; // 'user' or 'moderator'
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Topic> topics;
@@ -34,7 +33,7 @@ public class User {
     public User() {
     }
 
-    public User(String username, String password_hash, UserRole role) {
+    public User(String username, String password_hash, String role) {
         this.username = username;
         this.password_hash = password_hash;
         this.role = role;
@@ -42,6 +41,6 @@ public class User {
 
     @Override
     public String toString() {
-        return "User [id=" + id + ", username=" + username;
+        return "User{id=" + id + ", username='" + username + "', role='" + role + "'}";
     }
 }

@@ -22,7 +22,7 @@ public class Topic {
     @Column(nullable = false)
     private String description;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 
     @Column(nullable = false)
@@ -31,7 +31,7 @@ public class Topic {
     @Column(nullable = false)
     private int dislikes = 0;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User author;
 

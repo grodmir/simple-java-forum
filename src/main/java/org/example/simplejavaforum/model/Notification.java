@@ -15,15 +15,15 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "topic_id", nullable = false)
     private Topic topic;
 
     @Column(nullable = false)
     private String message;
 
-    @Column(name = "created_at" ,nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime createdAt;
 
     public Notification() {}
 
@@ -31,5 +31,10 @@ public class Notification {
         this.topic = topic;
         this.message = message;
         this.createdAt = LocalDateTime.now();
+    }
+
+    @Override
+    public String toString() {
+        return "Notification{id=" + id + ", topic=" + topic.getTitle() + ", message='" + message + "'}";
     }
 }

@@ -15,19 +15,19 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "topic_id", nullable = false)
     private Topic topic;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User author;
 
     @Column(nullable = false)
     private String text;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime createdAt;
 
     public Comment() {}
 
@@ -36,5 +36,10 @@ public class Comment {
         this.author = author;
         this.text = text;
         this.createdAt = LocalDateTime.now();
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{id=" + id + ", author=" + author.getUsername() + ", topic=" + topic.getTitle() + "}";
     }
 }
