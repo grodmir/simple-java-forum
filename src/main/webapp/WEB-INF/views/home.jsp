@@ -28,7 +28,8 @@
         <ul>
             <c:forEach var="topic" items="${topics}">
                 <li>
-                    <h3>${topic.title}</h3>
+                    <!-- Логика для вывода первых 500 символов содержания топика -->
+                    <h3><a href = ${pageContext.request.contextPath}/home/topic?id=${topic.id}> ${topic.title} </a></h3>
                     <p>
                         <c:choose>
                             <c:when test="${fn:length(topic.description) > 500}">
@@ -40,7 +41,7 @@
                         </c:choose>
                     </p>
                     <p>Дата создания: ${topic.createdAt}</p>
-                    <p>Понравилось: ${topic.likes}. Не понравилось: ${topic.dislikes}</p>
+                    <p>Понравилось: ${topic.likes} | Не понравилось: ${topic.dislikes}</p>
                 </li>
             </c:forEach>
         </ul>

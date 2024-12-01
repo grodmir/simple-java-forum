@@ -22,4 +22,8 @@ public class TopicService {
     public int getTopicsCount() {
         return topicDao.getTopicCount();
     }
+
+    public Topic getTopicById(int id) {
+        return topicDao.getTopicById(id);
+    }
 }
