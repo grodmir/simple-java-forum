@@ -16,9 +16,36 @@ public class TopicDao {
         }
     }
 
-    public List<Topic> findAll() {
+    public List<Topic> findAllSortedByDate() {
         try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
             return em.createQuery("SELECT t FROM Topic t ORDER BY t.createdAt DESC", Topic.class)
+                    .getResultList();
+        }
+    }
+
+    public List<Topic> findSortedByDateWithPagination(int page, int pageSize) {
+        int offset = (page - 1) * pageSize;
+        try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
+            return em.createQuery("SELECT t FROM Topic t ORDER BY t.createdAt DESC", Topic.class)
+                    .setFirstResult(offset)
+                    .setMaxResults(pageSize)
+                    .getResultList();
+        }
+    }
+
+    public List<Topic> findAllSortedByPopularity() {
+        try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
+            return em.createQuery("SELECT t FROM Topic t ORDER BY t.likes - t.dislikes DESC", Topic.class)
+                    .getResultList();
+        }
+    }
+
+    public List<Topic> findSortedByPopularityWithPagination(int page, int pageSize) {
+        int offset = (page - 1) * pageSize;
+        try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
+            return em.createQuery("SELECT t FROM Topic t ORDER BY t.likes - t.dislikes DESC", Topic.class)
+                    .setFirstResult(offset)
+                    .setMaxResults(pageSize)
                     .getResultList();
         }
     }
@@ -36,6 +63,13 @@ public class TopicDao {
             return em.createQuery("SELECT t FROM Topic t ORDER BY t.likes DESC", Topic.class)
                     .setMaxResults(limit)
                     .getResultList();
+        }
+    }
+
+    public int getTopicCount() {
+        try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
+            Long count = em.createQuery("SELECT COUNT(t) From Topic t", Long.class).getSingleResult();
+            return count.intValue();
         }
     }
 
