@@ -26,4 +26,8 @@ public class TopicService {
     public Topic getTopicById(int id) {
         return topicDao.getTopicById(id);
     }
+
+    public void save(Topic topic) {
+        topicDao.save(topic);
+    }
 }

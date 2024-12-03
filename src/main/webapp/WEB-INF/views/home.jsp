@@ -14,6 +14,13 @@
         <a href="login">Войти</a> | <a href="register">Регистрация</a>
     </header>
     <main>
+        <!-- Кнопка для перехода к созданию нового топика -->
+        <div>
+            <a href="${pageContext.request.contextPath}/home/create-topic">
+                <button>Создать новый топик</button>
+            </a>
+        </div>
+        <hr>
         <!-- Сортировка по критериям -->
         <form method="get" action="${pageContext.request.contextPath}/home">
             <label for="sort">Сортировка:</label>
@@ -24,6 +31,7 @@
             <button type="submit">Применить</button>
         </form>
 
+        <!-- Вывод всех тем, содержащихся в базе данных -->
         <h2>Темы:</h2>
         <ul>
             <c:forEach var="topic" items="${topics}">
@@ -43,6 +51,7 @@
                     <p>Дата создания: ${topic.createdAt}</p>
                     <p>Понравилось: ${topic.likes} | Не понравилось: ${topic.dislikes}</p>
                 </li>
+                <hr>
             </c:forEach>
         </ul>
 
