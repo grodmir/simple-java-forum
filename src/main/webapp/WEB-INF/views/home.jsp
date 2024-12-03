@@ -19,7 +19,7 @@
             <a href="${pageContext.request.contextPath}/home/create-topic">
                 <button>Создать новый топик</button>
             </a>
-        </div>
+        </div> <!-- HAHAHHA NEGRI PIDORI -->
         <hr>
         <!-- Сортировка по критериям -->
         <form method="get" action="${pageContext.request.contextPath}/home">

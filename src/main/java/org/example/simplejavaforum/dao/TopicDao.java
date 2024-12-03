@@ -77,16 +77,26 @@ public class TopicDao {
         EntityManager em = JpaUtil.getInstance().getEntityManager();
         try {
             em.getTransaction().begin();
-            if (topic.getId() == null) {
-                em.persist(topic);
-                log.info("Topic created: {}", topic);
-            } else {
-                em.merge(topic);
-                log.info("Topic updated: {}", topic);
-            }
+            em.persist(topic);
             em.getTransaction().commit();
+            log.info("Topic {} saved", topic.getTitle());
         } catch (Exception e) {
-            log.error("Error saving topic: {}", e.getMessage());
+            em.getTransaction().rollback();
+            log.error("Topic {} save failed", topic.getTitle(), e);
+        } finally {
+            em.close();
+        }
+    }
+
+    public void update(Topic topic) {
+        EntityManager em = JpaUtil.getInstance().getEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.merge(topic);
+            em.getTransaction().commit();
+            log.info("Topic updated: {}", topic);
+        } catch (Exception e) {
+            log.error("Error updating topic: {}", e.getMessage());
             em.getTransaction().rollback();
         } finally {
             em.close();

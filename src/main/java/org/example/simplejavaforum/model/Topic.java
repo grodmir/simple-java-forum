@@ -48,5 +48,7 @@ public class Topic {
         this.description = description;
         this.author = author;
         this.createdAt = LocalDateTime.now();
+        this.likes = 0;
+        this.dislikes = 0;
     }
 }
