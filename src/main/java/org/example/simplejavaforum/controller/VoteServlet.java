@@ -27,7 +27,7 @@ public class VoteServlet extends HttpServlet {
         }
 
         try {
-            int topicId = Integer.parseInt(idParam);
+            Long topicId = Long.parseLong(idParam);
             Topic topic = topicService.getTopicById(topicId);
 
             if (topic == null) {
@@ -46,7 +46,7 @@ public class VoteServlet extends HttpServlet {
                 return;
             }
 
-            topicService.save(topic);
+            topicService.update(topic);
             resp.sendRedirect(req.getContextPath() + "/home/topic?id=" + topicId);
         } catch (NumberFormatException e) {
             log.error("id or voteType is null");

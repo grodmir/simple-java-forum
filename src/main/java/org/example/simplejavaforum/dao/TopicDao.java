@@ -10,7 +10,7 @@ import java.util.List;
 @Slf4j
 public class TopicDao {
 
-    public Topic getTopicById(int id) {
+    public Topic getTopicById(Long id) {
         try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
             return em.find(Topic.class, id);
         }

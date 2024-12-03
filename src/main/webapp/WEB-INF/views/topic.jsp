@@ -29,6 +29,25 @@
     </h3>
     <!-- Кнопка возврата на главную -->
     <a href="${pageContext.request.contextPath}/home">Вернуться на главную</a>
+
+    <hr>
+    <!-- Форма добавления комментария -->
+    <h3>Добавить комментарий:</h3>
+    <form method="post" action="${pageContext.request.contextPath}/home/topic/comment">
+        <textarea name="content" rows="5" cols="50" placeholder="Введите ваш комментарий..." required></textarea><br>
+        <input type="hidden" name="topicId" value="${topic.id}">
+        <button type="submit">Отправить</button>
+    </form>
+
+    <!-- Список комментариев -->
+    <ul>
+        <c:forEach var="comment" items="${comments}">
+            <li>
+                <p>${comment.text}</p>
+                <p><i>Автор: ${comment.author.username} | Дата: ${comment.createdAt}</i></p>
+            </li>
+        </c:forEach>
+    </ul>
 </main>
 </body>
 </html>

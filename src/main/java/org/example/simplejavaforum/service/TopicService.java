@@ -23,11 +23,15 @@ public class TopicService {
         return topicDao.getTopicCount();
     }
 
-    public Topic getTopicById(int id) {
+    public Topic getTopicById(Long id) {
         return topicDao.getTopicById(id);
     }
 
     public void save(Topic topic) {
         topicDao.save(topic);
+    }
+
+    public void update(Topic topic) {
+        topicDao.update(topic);
     }
 }
