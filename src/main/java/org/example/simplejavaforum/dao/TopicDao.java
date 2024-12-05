@@ -33,17 +33,20 @@ public class TopicDao {
         }
     }
 
-    public List<Topic> findAllSortedByPopularity() {
+    public List<Topic> findSortedByLikesWithPagination(int page, int pageSize) {
+        int offset = (page - 1) * pageSize;
         try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
-            return em.createQuery("SELECT t FROM Topic t ORDER BY t.likes - t.dislikes DESC", Topic.class)
+            return em.createQuery("SELECT t FROM Topic t ORDER BY t.likes DESC", Topic.class)
+                    .setFirstResult(offset)
+                    .setMaxResults(pageSize)
                     .getResultList();
         }
     }
 
-    public List<Topic> findSortedByPopularityWithPagination(int page, int pageSize) {
+    public List<Topic> findSortedByDislikesWithPagination(int page, int pageSize) {
         int offset = (page - 1) * pageSize;
         try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
-            return em.createQuery("SELECT t FROM Topic t ORDER BY t.likes - t.dislikes DESC", Topic.class)
+            return em.createQuery("SELECT t FROM Topic t ORDER BY t.dislikes DESC", Topic.class)
                     .setFirstResult(offset)
                     .setMaxResults(pageSize)
                     .getResultList();

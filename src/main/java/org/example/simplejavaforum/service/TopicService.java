@@ -11,7 +11,9 @@ public class TopicService {
     public List<Topic> getTopicsSortedBy(String sort, int page, int pageSize) {
         switch (sort) {
             case "likes":
-                return topicDao.findSortedByPopularityWithPagination(page, pageSize);
+                return topicDao.findSortedByLikesWithPagination(page, pageSize);
+            case "dislikes":
+                return topicDao.findSortedByDislikesWithPagination(page, pageSize);
             case "data":
                 return topicDao.findSortedByDateWithPagination(page, pageSize);
             default:

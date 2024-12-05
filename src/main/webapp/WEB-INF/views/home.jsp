@@ -26,7 +26,8 @@
             <label for="sort">Сортировка:</label>
             <select name="sort" id="sort">
                 <option value="date" ${param.sort == 'date' ? 'selected' : ''}>По дате</option>
-                <option value="likes" ${param.sort == 'likes' ? 'selected' : ''}>По популярности</option>
+                <option value="likes" ${param.sort == 'likes' ? 'selected' : ''}>По количеству лайков</option>
+                <option value="dislikes" ${param.sort == 'likes' ? 'selected' : ''}>По количеству дизлайков</option>
             </select>
             <button type="submit">Применить</button>
         </form>
