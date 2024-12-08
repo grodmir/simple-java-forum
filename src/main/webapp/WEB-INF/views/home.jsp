@@ -11,7 +11,7 @@
     <header>
         <h1>Добро пожаловать в наш Форум!</h1>
         <!-- Заглушка для авторизации -->
-        <a href="login">Войти</a> | <a href="register">Регистрация</a>
+        <a href="${pageContext.request.contextPath}/authorization">Войти</a> | <a href="${pageContext.request.contextPath}/register">Регистрация</a>
     </header>
     <main>
         <!-- Кнопка для перехода к созданию нового топика -->

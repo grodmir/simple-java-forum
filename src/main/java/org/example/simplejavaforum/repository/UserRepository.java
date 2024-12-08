@@ -1,4 +1,4 @@
-package org.example.simplejavaforum.dao;
+package org.example.simplejavaforum.repository;
 
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +8,7 @@ import org.example.simplejavaforum.util.JpaUtil;
 import java.util.List;
 
 @Slf4j
-public class UserDao {
+public class UserRepository {
 
     public User findById(Long id) {
         try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
@@ -30,19 +30,6 @@ public class UserDao {
         } catch (Exception e) {
             log.error("User not found with username {}: {}", username, e.getMessage());
             return null;
-        }
-    }
-
-    public List<User> findByRole(String role) {
-        if (!isRoleValid(role)) {
-            log.warn("Invalid role provided: {}", role);
-            return List.of();
-        }
-
-        try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
-            return em.createQuery("SELECT u FROM User u WHERE u.role = :role", User.class)
-                    .setParameter("role", role)
-                    .getResultList();
         }
     }
 

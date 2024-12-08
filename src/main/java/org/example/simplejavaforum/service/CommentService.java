@@ -1,12 +1,12 @@
 package org.example.simplejavaforum.service;
 
-import org.example.simplejavaforum.dao.CommentDao;
+import org.example.simplejavaforum.repository.CommentRepository;
 import org.example.simplejavaforum.model.Comment;
 
 import java.util.List;
 
 public class CommentService {
-    private CommentDao commentDao = new CommentDao();
+    private CommentRepository commentDao = new CommentRepository();
 
     public void save(Comment comment) {
         commentDao.save(comment);

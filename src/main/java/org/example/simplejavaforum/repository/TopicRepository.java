@@ -1,4 +1,4 @@
-package org.example.simplejavaforum.dao;
+package org.example.simplejavaforum.repository;
 
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +8,7 @@ import org.example.simplejavaforum.util.JpaUtil;
 import java.util.List;
 
 @Slf4j
-public class TopicDao {
+public class TopicRepository {
 
     public Topic getTopicById(Long id) {
         try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {

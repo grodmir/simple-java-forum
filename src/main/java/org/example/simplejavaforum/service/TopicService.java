@@ -1,12 +1,12 @@
 package org.example.simplejavaforum.service;
 
-import org.example.simplejavaforum.dao.TopicDao;
+import org.example.simplejavaforum.repository.TopicRepository;
 import org.example.simplejavaforum.model.Topic;
 
 import java.util.List;
 
 public class TopicService {
-    private final TopicDao topicDao = new TopicDao();
+    private final TopicRepository topicDao = new TopicRepository();
 
     public List<Topic> getTopicsSortedBy(String sort, int page, int pageSize) {
         switch (sort) {

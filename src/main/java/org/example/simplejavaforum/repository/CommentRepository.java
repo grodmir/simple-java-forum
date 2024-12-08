@@ -1,4 +1,4 @@
-package org.example.simplejavaforum.dao;
+package org.example.simplejavaforum.repository;
 
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
@@ -8,32 +8,42 @@ import org.example.simplejavaforum.util.JpaUtil;
 import java.util.List;
 
 @Slf4j
-public class CommentDao {
+public class CommentRepository {
 
     public Comment findById(Long id) {
         try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
-            return em.find(Comment.class, id);
+            return em.createQuery(
+                            "SELECT c FROM Comment c JOIN FETCH c.topic JOIN FETCH c.author WHERE c.id = :id",
+                            Comment.class)
+                    .setParameter("id", id)
+                    .getSingleResult();
         }
     }
 
     public List<Comment> findAll() {
         try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
-            return em.createQuery("SELECT c FROM Comment c ORDER BY c.createdAt DESC", Comment.class)
+            return em.createQuery(
+                            "SELECT c FROM Comment c JOIN FETCH c.topic JOIN FETCH c.author ORDER BY c.createdAt DESC",
+                            Comment.class)
                     .getResultList();
         }
     }
 
     public List<Comment> findByTopicId(Long topicId) {
         try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
-            return em.createQuery("SELECT c FROM Comment c WHERE c.topic.id = :topicId ORDER BY c.createdAt ASC", Comment.class)
-                    .setParameter("topicId", topicId
-                    ).getResultList();
+            return em.createQuery(
+                            "SELECT c FROM Comment c JOIN FETCH c.topic JOIN FETCH c.author WHERE c.topic.id = :topicId ORDER BY c.createdAt ASC",
+                            Comment.class)
+                    .setParameter("topicId", topicId)
+                    .getResultList();
         }
     }
 
     public List<Comment> findByAuthorId(Long authorId) {
         try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
-            return em.createQuery("SELECT c FROM Comment c WHERE c.author.id = :userId ORDER BY c.createdAt ASC", Comment.class)
+            return em.createQuery(
+                            "SELECT c FROM Comment c JOIN FETCH c.topic JOIN FETCH c.author WHERE c.author.id = :userId ORDER BY c.createdAt ASC",
+                            Comment.class)
                     .setParameter("userId", authorId)
                     .getResultList();
         }
