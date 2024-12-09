@@ -9,9 +9,14 @@
 </head>
 <body>
     <header>
-        <h1>Добро пожаловать в наш Форум!</h1>
+        <h1>Добро пожаловать на наш форум
+            <c:if test="${not empty username}">
+                , ${username}
+            </c:if>
+        </h1>
         <!-- Заглушка для авторизации -->
-        <a href="${pageContext.request.contextPath}/authorization">Войти</a> | <a href="${pageContext.request.contextPath}/register">Регистрация</a>
+        <a href="${pageContext.request.contextPath}/login">Войти</a> | <a href="${pageContext.request.contextPath}/register">Регистрация</a><br>
+        <a href = ${pageContext.request.contextPath}/logout>Выйти из учётной записи</a>
     </header>
     <main>
         <!-- Кнопка для перехода к созданию нового топика -->

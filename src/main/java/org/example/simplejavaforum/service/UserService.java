@@ -34,4 +34,19 @@ public class UserService {
             throw new RuntimeException("Error while hashing password", e);
         }
     }
+
+    public User validateUser(String username, String password) {
+        User user = userDao.findByUsername(username);
+        if (user == null) {
+            return null; // Пользователь не найден
+        }
+
+        String hashedPassword = hashPassword(password);
+
+        if (hashedPassword.equals(user.getPassword_hash())) {
+            return user; // Успешная валидация
+        } else {
+            return null; // Пароль неверный
+        }
+    }
 }

@@ -5,8 +5,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.example.simplejavaforum.model.Topic;
+import org.example.simplejavaforum.model.User;
 import org.example.simplejavaforum.service.TopicService;
 
 import java.io.IOException;
@@ -32,6 +34,18 @@ public class HomeServlet extends HttpServlet {
 
         int totalTopics = topicService.getTopicsCount();
         boolean hasNextPage = page * pageSize < totalTopics;
+
+        /* Тестовая часть для проверки работоспособности авторизации */
+        HttpSession session = req.getSession(false); // Не создаем новую сессию
+        String username = "";
+
+        if (session != null) {
+            User user = (User) session.getAttribute("user");
+            if (user != null) {
+                username = user.getUsername(); // Получаем имя пользователя
+            }
+        }
+        req.setAttribute("username", username);
 
         req.setAttribute("topics", topics);
         req.setAttribute("currentPage", page);
