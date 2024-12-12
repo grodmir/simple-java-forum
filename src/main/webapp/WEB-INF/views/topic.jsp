@@ -10,8 +10,9 @@
 </header>
 <main>
     <p>${topic.description}</p>
-    <p>Дата создания: ${topic.createdAt}</p>
+    <p>Дата создания: ${topic.formattedCreatedAt}</p>
     <p>Понравилось: ${topic.likes}. Не понравилось: ${topic.dislikes}</p>
+    <p>Автор: ${topic.author.username}</p>
     <h3>
         <div style="display: inline-block; margin-right: 10px;">
             <form method="post" action="${pageContext.request.contextPath}/home/topic/vote" style="display:inline;">
@@ -44,7 +45,7 @@
         <c:forEach var="comment" items="${comments}">
             <li>
                 <p>${comment.text}</p>
-                <p><i>Автор: ${comment.author.username} | Дата: ${comment.createdAt}</i></p>
+                <p><i>Автор: ${comment.author.username} | Дата: ${comment.formattedCreatedAt}</i></p>
             </li>
         </c:forEach>
     </ul>

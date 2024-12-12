@@ -35,7 +35,6 @@ public class HomeServlet extends HttpServlet {
         int totalTopics = topicService.getTopicsCount();
         boolean hasNextPage = page * pageSize < totalTopics;
 
-        /* Тестовая часть для проверки работоспособности авторизации */
         HttpSession session = req.getSession(false); // Не создаем новую сессию
         String username = "";
 

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
@@ -41,5 +42,10 @@ public class Comment {
     @Override
     public String toString() {
         return "Comment{id=" + id + ", author=" + author.getUsername() + ", topic=" + topic.getTitle() + "}";
+    }
+
+    public String getFormattedCreatedAt() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+        return createdAt.format(formatter);
     }
 }

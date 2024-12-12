@@ -12,7 +12,7 @@ import java.util.Set;
 @WebFilter("/*")
 public class AuthFilter implements Filter {
     private static final Set<String> PUBLIC_URLS = Set.of(
-            "/login", "/registration", "/home", "/logout"
+            "/login", "/register", "/home", "/logout", "/"
     );
 
     @Override

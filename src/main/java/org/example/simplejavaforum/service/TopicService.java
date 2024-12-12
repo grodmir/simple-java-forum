@@ -6,34 +6,34 @@ import org.example.simplejavaforum.model.Topic;
 import java.util.List;
 
 public class TopicService {
-    private final TopicRepository topicDao = new TopicRepository();
+    private final TopicRepository topicRepository = new TopicRepository();
 
     public List<Topic> getTopicsSortedBy(String sort, int page, int pageSize) {
         switch (sort) {
             case "likes":
-                return topicDao.findSortedByLikesWithPagination(page, pageSize);
+                return topicRepository.findSortedByLikesWithPagination(page, pageSize);
             case "dislikes":
-                return topicDao.findSortedByDislikesWithPagination(page, pageSize);
+                return topicRepository.findSortedByDislikesWithPagination(page, pageSize);
             case "data":
-                return topicDao.findSortedByDateWithPagination(page, pageSize);
+                return topicRepository.findSortedByDateWithPagination(page, pageSize);
             default:
-                return topicDao.findSortedByDateWithPagination(page, pageSize);
+                return topicRepository.findSortedByDateWithPagination(page, pageSize);
         }
     }
 
     public int getTopicsCount() {
-        return topicDao.getTopicCount();
+        return topicRepository.getTopicCount();
     }
 
     public Topic getTopicById(Long id) {
-        return topicDao.getTopicById(id);
+        return topicRepository.getTopicById(id);
     }
 
     public void save(Topic topic) {
-        topicDao.save(topic);
+        topicRepository.save(topic);
     }
 
     public void update(Topic topic) {
-        topicDao.update(topic);
+        topicRepository.update(topic);
     }
 }

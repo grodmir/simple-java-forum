@@ -24,7 +24,7 @@
             <a href="${pageContext.request.contextPath}/home/create-topic">
                 <button>Создать новый топик</button>
             </a>
-        </div> <!-- HAHAHHA NEGRI PIDORI -->
+        </div>
         <hr>
         <!-- Сортировка по критериям -->
         <form method="get" action="${pageContext.request.contextPath}/home">
@@ -54,7 +54,8 @@
                             </c:otherwise>
                         </c:choose>
                     </p>
-                    <p>Дата создания: ${topic.createdAt}</p>
+                    <p>Дата создания: ${topic.formattedCreatedAt}</p>
+                    <p>Автор: ${topic.author.username}</p>
                     <p>Понравилось: ${topic.likes} | Не понравилось: ${topic.dislikes}</p>
                 </li>
                 <hr>

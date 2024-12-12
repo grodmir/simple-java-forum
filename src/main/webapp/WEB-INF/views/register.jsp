@@ -14,5 +14,6 @@
 
     <button type="submit">Зарегистрироваться</button>
 </form>
+<a href = "${pageContext.request.contextPath}/home">На главную страницу</a>
 </body>
 </html>

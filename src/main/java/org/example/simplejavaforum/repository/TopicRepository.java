@@ -1,6 +1,7 @@
 package org.example.simplejavaforum.repository;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import lombok.extern.slf4j.Slf4j;
 import org.example.simplejavaforum.model.Topic;
 import org.example.simplejavaforum.util.JpaUtil;
@@ -11,14 +12,18 @@ import java.util.List;
 public class TopicRepository {
 
     public Topic getTopicById(Long id) {
-        try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
-            return em.find(Topic.class, id);
+        try(EntityManager em = JpaUtil.getInstance().getEntityManager()) {
+            return em.createQuery("SELECT t FROM Topic t JOIN FETCH t.author WHERE t.id = :id", Topic.class)
+                    .setParameter("id", id)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null; // Обрабатываем случай, когда тема не найдена
         }
     }
 
     public List<Topic> findAllSortedByDate() {
         try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
-            return em.createQuery("SELECT t FROM Topic t ORDER BY t.createdAt DESC", Topic.class)
+            return em.createQuery("SELECT t FROM Topic t JOIN FETCH t.author ORDER BY t.createdAt DESC", Topic.class)
                     .getResultList();
         }
     }
@@ -26,7 +31,7 @@ public class TopicRepository {
     public List<Topic> findSortedByDateWithPagination(int page, int pageSize) {
         int offset = (page - 1) * pageSize;
         try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
-            return em.createQuery("SELECT t FROM Topic t ORDER BY t.createdAt DESC", Topic.class)
+            return em.createQuery("SELECT t FROM Topic t JOIN FETCH t.author ORDER BY t.createdAt DESC", Topic.class)
                     .setFirstResult(offset)
                     .setMaxResults(pageSize)
                     .getResultList();
@@ -36,7 +41,7 @@ public class TopicRepository {
     public List<Topic> findSortedByLikesWithPagination(int page, int pageSize) {
         int offset = (page - 1) * pageSize;
         try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
-            return em.createQuery("SELECT t FROM Topic t ORDER BY t.likes DESC", Topic.class)
+            return em.createQuery("SELECT t FROM Topic t JOIN FETCH t.author ORDER BY t.likes DESC", Topic.class)
                     .setFirstResult(offset)
                     .setMaxResults(pageSize)
                     .getResultList();
@@ -46,7 +51,7 @@ public class TopicRepository {
     public List<Topic> findSortedByDislikesWithPagination(int page, int pageSize) {
         int offset = (page - 1) * pageSize;
         try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
-            return em.createQuery("SELECT t FROM Topic t ORDER BY t.dislikes DESC", Topic.class)
+            return em.createQuery("SELECT t FROM Topic t JOIN FETCH t.author ORDER BY t.dislikes DESC", Topic.class)
                     .setFirstResult(offset)
                     .setMaxResults(pageSize)
                     .getResultList();
@@ -55,7 +60,7 @@ public class TopicRepository {
 
     public List<Topic> findByTitle(String title) {
         try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
-            return em.createQuery("SELECT t FROM Topic t WHERE LOWER(t.title) LIKE :title ORDER BY t.createdAt DESC", Topic.class)
+            return em.createQuery("SELECT t FROM Topic t JOIN FETCH t.author WHERE LOWER(t.title) LIKE :title ORDER BY t.createdAt DESC", Topic.class)
                     .setParameter("title", "%" + title.toLowerCase() + "%")
                     .getResultList();
         }
@@ -63,7 +68,7 @@ public class TopicRepository {
 
     public List<Topic> findMostLiked(int limit) {
         try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
-            return em.createQuery("SELECT t FROM Topic t ORDER BY t.likes DESC", Topic.class)
+            return em.createQuery("SELECT t FROM Topic t JOIN FETCH t.author ORDER BY t.likes DESC", Topic.class)
                     .setMaxResults(limit)
                     .getResultList();
         }

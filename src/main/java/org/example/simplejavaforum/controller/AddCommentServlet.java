@@ -4,6 +4,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.example.simplejavaforum.model.Comment;
 import org.example.simplejavaforum.model.Topic;
@@ -24,6 +25,7 @@ public class AddCommentServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         req.setCharacterEncoding("UTF-8");
+        HttpSession session = req.getSession(false);
 
         String content = req.getParameter("content");
         String topicIdParam  = req.getParameter("topicId");
@@ -33,11 +35,16 @@ public class AddCommentServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
+        if (session == null) {
+            log.warn("Invalid session");
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
 
         try {
             Long topicId = Long.valueOf(topicIdParam);
             Topic topic = topicService.getTopicById(topicId);
-            User author = userService.getUserById(1L); // Захардкоженный пользователь
+            User author = (User) session.getAttribute("user");
 
             Comment comment = new Comment(topic, author, content);
             commentService.save(comment);

@@ -14,6 +14,7 @@
 
     <button type="submit">Войти</button>
 </form>
-<a href="${pageContext.request.contextPath}/registration">Регистрация</a>
+<a href="${pageContext.request.contextPath}/registration">Регистрация</a><br>
+<a href = "${pageContext.request.contextPath}/home">На главную страницу</a>
 </body>
 </html>

@@ -4,6 +4,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.example.simplejavaforum.model.Topic;
 import org.example.simplejavaforum.model.User;
@@ -23,16 +24,21 @@ public class SaveTopicServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8"); // Поддержка кириллицы
         String title = req.getParameter("title");
         String content = req.getParameter("description");
+        HttpSession session = req.getSession(false);
 
         if (title == null || content == null || title.isEmpty() || content.isEmpty()) {
             log.warn("title and content are empty");
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
+        if (session == null) {
+            log.warn("Invalid session");
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
 
-        User user = userService.getUserById(1L);
-        System.out.println("user = " + user);
-        Topic topic = new Topic(title, content, user);
+        User author = (User) session.getAttribute("user");
+        Topic topic = new Topic(title, content, author);
 
         try {
             topicService.save(topic);
