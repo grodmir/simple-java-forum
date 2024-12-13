@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - JDBC_DATABASE_URL=jdbc:postgresql://db:5432/forumdb
+      - JDBC_DATABASE_USERNAME=forumuser
+      - JDBC_DATABASE_PASSWORD=forumpassword
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: forumuser
+      POSTGRES_PASSWORD: forumpassword
+      POSTGRES_DB: forumdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:

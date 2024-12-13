@@ -1,0 +1,14 @@
+<Context>
+    <Resource name="jdbc/ForumDB"
+              auth="Container"
+              type="javax.sql.DataSource"
+              maxTotal="20"
+              maxIdle="10"
+              minIdle="5"
+              initialSize="5"
+              driverClassName="org.postgresql.Driver"
+              url="jdbc:postgresql://db:5432/forumdb"
+              username="forumuser"
+              password="forumpassword"
+              validationQuery="SELECT 1"/>
+</Context>
