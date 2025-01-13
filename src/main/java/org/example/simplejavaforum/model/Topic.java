@@ -39,9 +39,6 @@ public class Topic {
     @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
-    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Notification> notifications;
-
     public Topic() {}
 
     public Topic(String title, String description, User author) {

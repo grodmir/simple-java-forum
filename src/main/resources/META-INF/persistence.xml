@@ -6,7 +6,6 @@
         <class>org.example.simplejavaforum.model.User</class>
         <class>org.example.simplejavaforum.model.Topic</class>
         <class>org.example.simplejavaforum.model.Comment</class>
-        <class>org.example.simplejavaforum.model.Notification</class>
         <class>org.example.simplejavaforum.model.TopicVote</class>
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://db:5432/forumdb"/>
