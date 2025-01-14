@@ -6,13 +6,14 @@ import org.example.simplejavaforum.model.Comment;
 import java.util.List;
 
 public class CommentService {
-    private CommentRepository commentDao = new CommentRepository();
+
+    private CommentRepository commentRepository = CommentRepository.getInstance();
 
     public void save(Comment comment) {
-        commentDao.save(comment);
+        commentRepository.save(comment);
     }
 
     public List<Comment> findAllByTopicId(Long topicId) {
-        return commentDao.findByTopicId(topicId);
+        return commentRepository.findByTopicId(topicId);
     }
 }

@@ -7,7 +7,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class UserService {
-    private final UserRepository userDao = new UserRepository();
+    private final UserRepository userDao = UserRepository.getInstance();
 
     public User getUserById(Long id) {
         return userDao.findById(id);

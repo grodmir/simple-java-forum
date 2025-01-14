@@ -11,6 +11,15 @@ import java.util.List;
 @Slf4j
 public class TopicRepository {
 
+    private static TopicRepository instance;
+
+    public static synchronized TopicRepository getInstance() {
+        if (instance == null) {
+            instance = new TopicRepository();
+        }
+        return instance;
+    }
+
     public Topic getTopicById(Long id) {
         try (Session session = HibernateUtil.getInstance().getSessionFactory().openSession()) {
             return session.createQuery(

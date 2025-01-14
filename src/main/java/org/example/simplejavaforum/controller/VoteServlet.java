@@ -37,7 +37,6 @@ public class VoteServlet extends HttpServlet {
 
             topicVoteService.vote(user.getId(), topicId, voteType);
 
-            log.info("User {} successfully voted {} for topic {}", user.getId(), voteType, topicId);
             resp.sendRedirect(req.getContextPath() + "/home/topic?id=" + topicId);
         } catch (IllegalStateException e) {
             log.warn("User {} tried to vote multiple times for topic {}", user.getId(), topicIdParam);

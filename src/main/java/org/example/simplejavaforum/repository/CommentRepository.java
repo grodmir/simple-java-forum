@@ -11,6 +11,15 @@ import java.util.List;
 @Slf4j
 public class CommentRepository {
 
+    private static CommentRepository instance;
+
+    public static synchronized CommentRepository getInstance() {
+        if (instance == null) {
+            instance = new CommentRepository();
+        }
+        return instance;
+    }
+
     public Comment findById(Long id) {
         try (Session session = HibernateUtil.getInstance().getSessionFactory().openSession()) {
             return session.createQuery(

@@ -11,6 +11,15 @@ import java.util.List;
 @Slf4j
 public class UserRepository {
 
+    private static UserRepository instance;
+
+    public static synchronized UserRepository getInstance() {
+        if (instance == null) {
+            instance = new UserRepository();
+        }
+        return instance;
+    }
+
     public User findById(Long id) {
         try (Session session = HibernateUtil.getInstance().getSessionFactory().openSession()) {
             return session.find(User.class, id);

@@ -9,6 +9,15 @@ import org.hibernate.Transaction;
 @Slf4j
 public class TopicVoteRepository {
 
+    private static TopicVoteRepository instance;
+
+    public static TopicVoteRepository getInstance() {
+        if (instance == null) {
+            instance = new TopicVoteRepository();
+        }
+        return instance;
+    }
+
     public TopicVote findByUserAndTopic(Long userId, Long topicId) {
         try (Session session = HibernateUtil.getInstance().getSessionFactory().openSession()) {
             return session.createQuery(
