@@ -1,0 +1,22 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <!-- Database connection settings -->
+        <property name="hibernate.connection.url">jdbc:postgresql://db:5432/forumdb</property>
+        <property name="hibernate.connection.username">forumuser</property>
+        <property name="hibernate.connection.password">forumpassword</property>
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+
+        <!-- Hibernate settings -->
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+        <!-- List of annotated classes -->
+        <mapping class="org.example.simplejavaforum.model.User"/>
+        <mapping class="org.example.simplejavaforum.model.Topic"/>
+        <mapping class="org.example.simplejavaforum.model.Comment"/>
+        <mapping class="org.example.simplejavaforum.model.TopicVote"/>
+    </session-factory>
+</hibernate-configuration>

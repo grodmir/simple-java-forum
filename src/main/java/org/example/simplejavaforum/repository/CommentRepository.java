@@ -1,9 +1,10 @@
 package org.example.simplejavaforum.repository;
 
-import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.example.simplejavaforum.model.Comment;
-import org.example.simplejavaforum.util.JpaUtil;
+import org.example.simplejavaforum.util.HibernateUtil;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.util.List;
 
@@ -11,81 +12,93 @@ import java.util.List;
 public class CommentRepository {
 
     public Comment findById(Long id) {
-        try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
-            return em.createQuery(
+        try (Session session = HibernateUtil.getInstance().getSessionFactory().openSession()) {
+            return session.createQuery(
                             "SELECT c FROM Comment c JOIN FETCH c.topic JOIN FETCH c.author WHERE c.id = :id",
                             Comment.class)
                     .setParameter("id", id)
-                    .getSingleResult();
+                    .uniqueResult();
+        } catch (Exception e) {
+            log.error("Error finding comment by ID: {}", id, e);
+            throw e;
         }
     }
 
     public List<Comment> findAll() {
-        try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
-            return em.createQuery(
+        try (Session session = HibernateUtil.getInstance().getSessionFactory().openSession()) {
+            return session.createQuery(
                             "SELECT c FROM Comment c JOIN FETCH c.topic JOIN FETCH c.author ORDER BY c.createdAt DESC",
                             Comment.class)
-                    .getResultList();
+                    .list();
+        } catch (Exception e) {
+            log.error("Error finding all comments", e);
+            throw e;
         }
     }
 
     public List<Comment> findByTopicId(Long topicId) {
-        try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
-            return em.createQuery(
+        try (Session session = HibernateUtil.getInstance().getSessionFactory().openSession()) {
+            return session.createQuery(
                             "SELECT c FROM Comment c JOIN FETCH c.topic JOIN FETCH c.author WHERE c.topic.id = :topicId ORDER BY c.createdAt ASC",
                             Comment.class)
                     .setParameter("topicId", topicId)
-                    .getResultList();
+                    .list();
+        } catch (Exception e) {
+            log.error("Error finding comments by topic ID: {}", topicId, e);
+            throw e;
         }
     }
 
     public List<Comment> findByAuthorId(Long authorId) {
-        try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
-            return em.createQuery(
+        try (Session session = HibernateUtil.getInstance().getSessionFactory().openSession()) {
+            return session.createQuery(
                             "SELECT c FROM Comment c JOIN FETCH c.topic JOIN FETCH c.author WHERE c.author.id = :userId ORDER BY c.createdAt ASC",
                             Comment.class)
                     .setParameter("userId", authorId)
-                    .getResultList();
+                    .list();
+        } catch (Exception e) {
+            log.error("Error finding comments by author ID: {}", authorId, e);
+            throw e;
         }
     }
 
     public void save(Comment comment) {
-        EntityManager em = JpaUtil.getInstance().getEntityManager();
-        try {
-            em.getTransaction().begin();
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getInstance().getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
             if (comment.getId() == null) {
-                em.persist(comment);
+                session.persist(comment);
                 log.info("Comment created: {}", comment);
             } else {
-                em.merge(comment);
+                session.merge(comment);
                 log.info("Comment updated: {}", comment);
             }
-            em.getTransaction().commit();
+            transaction.commit();
         } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
             log.error("Error saving comment: {}", comment, e);
-            em.getTransaction().rollback();
-        } finally {
-            em.close();
         }
     }
 
     public void delete(Long id) {
-        EntityManager em = JpaUtil.getInstance().getEntityManager();
-        try {
-            em.getTransaction().begin();
-            Comment comment = em.find(Comment.class, id);
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getInstance().getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            Comment comment = session.get(Comment.class, id);
             if (comment != null) {
-                em.remove(comment);
+                session.remove(comment);
                 log.info("Comment deleted: {}", comment);
             } else {
                 log.warn("Comment not found: {}", id);
             }
-            em.getTransaction().commit();
+            transaction.commit();
         } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
             log.error("Error deleting comment: {}", id, e);
-            em.getTransaction().rollback();
-        } finally {
-            em.close();
         }
     }
 }

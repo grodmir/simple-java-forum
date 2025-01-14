@@ -1,9 +1,10 @@
 package org.example.simplejavaforum.repository;
 
-import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.example.simplejavaforum.model.User;
-import org.example.simplejavaforum.util.JpaUtil;
+import org.example.simplejavaforum.util.HibernateUtil;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.util.List;
 
@@ -11,22 +12,28 @@ import java.util.List;
 public class UserRepository {
 
     public User findById(Long id) {
-        try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
-            return em.find(User.class, id);
+        try (Session session = HibernateUtil.getInstance().getSessionFactory().openSession()) {
+            return session.find(User.class, id);
+        } catch (Exception e) {
+            log.error("Error finding user by id {}: {}", id, e.getMessage());
+            return null;
         }
     }
 
     public List<User> findAll() {
-        try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
-            return em.createQuery("SELECT u FROM User u", User.class).getResultList();
+        try (Session session = HibernateUtil.getInstance().getSessionFactory().openSession()) {
+            return session.createQuery("SELECT u FROM User u", User.class).getResultList();
+        } catch (Exception e) {
+            log.error("Error finding all users: {}", e.getMessage());
+            return List.of(); // Возвращаем пустой список в случае ошибки
         }
     }
 
     public User findByUsername(String username) {
-        try (EntityManager em = JpaUtil.getInstance().getEntityManager()) {
-            return em.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class)
+        try (Session session = HibernateUtil.getInstance().getSessionFactory().openSession()) {
+            return session.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class)
                     .setParameter("username", username)
-                    .getSingleResult();
+                    .uniqueResult();
         } catch (Exception e) {
             log.error("User not found with username {}: {}", username, e.getMessage());
             return null;
@@ -34,47 +41,43 @@ public class UserRepository {
     }
 
     public void save(User user) {
-        if(!isRoleValid(user.getRole())) {
+        if (!isRoleValid(user.getRole())) {
             log.warn("Invalid role provided: {}", user.getRole());
             throw new IllegalArgumentException("Invalid role provided: " + user.getRole());
         }
 
-        EntityManager em = JpaUtil.getInstance().getEntityManager();
-        try {
-            em.getTransaction().begin();
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getInstance().getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
             if (user.getId() == null) {
-                em.persist(user);
+                session.persist(user);
                 log.info("User created: {}", user.getUsername());
             } else {
-                em.merge(user); // Update
+                session.merge(user); // Update
                 log.info("User updated: {}", user.getUsername());
             }
-            em.getTransaction().commit();
+            transaction.commit();
         } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
             log.error("Error saving user: {}", e.getMessage());
-            em.getTransaction().rollback();
-        } finally {
-            em.close();
         }
     }
 
     public void delete(Long id) {
-        EntityManager em = JpaUtil.getInstance().getEntityManager();
-        try {
-            em.getTransaction().begin();
-            User user = em.find(User.class, id);
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getInstance().getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            User user = session.find(User.class, id);
             if (user != null) {
-                em.remove(user);
+                session.remove(user);
                 log.info("User deleted: {}", user.getUsername());
             } else {
                 log.warn("User with id {} not found", id);
             }
-            em.getTransaction().commit();
+            transaction.commit();
         } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
             log.error("Error deleting user: {}", e.getMessage());
-            em.getTransaction().rollback();
-        } finally {
-            em.close();
         }
     }
 
