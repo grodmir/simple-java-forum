@@ -1,24 +1,25 @@
 package org.example.simplejavaforum.service;
 
-import org.example.simplejavaforum.repository.UserRepository;
 import org.example.simplejavaforum.model.User;
+import org.example.simplejavaforum.repository.UserRepository;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class UserService {
-    private final UserRepository userDao = UserRepository.getInstance();
+
+    private final UserRepository userRepository = UserRepository.getInstance();
 
     public User getUserById(Long id) {
-        return userDao.findById(id);
+        return userRepository.findById(id);
     }
 
     public void save(User user) {
-        userDao.save(user);
+        userRepository.save(user);
     }
 
     public boolean isUsernameTaken(String username) {
-        return userDao.findByUsername(username) != null;
+        return userRepository.findByUsername(username) != null;
     }
 
     public String hashPassword(String password) {
@@ -36,7 +37,7 @@ public class UserService {
     }
 
     public User validateUser(String username, String password) {
-        User user = userDao.findByUsername(username);
+        User user = userRepository.findByUsername(username);
         if (user == null) {
             return null; // Пользователь не найден
         }

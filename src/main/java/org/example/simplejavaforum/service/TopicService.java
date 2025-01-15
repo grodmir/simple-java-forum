@@ -1,11 +1,12 @@
 package org.example.simplejavaforum.service;
 
-import org.example.simplejavaforum.repository.TopicRepository;
 import org.example.simplejavaforum.model.Topic;
+import org.example.simplejavaforum.repository.TopicRepository;
 
 import java.util.List;
 
 public class TopicService {
+
     private final TopicRepository topicRepository = TopicRepository.getInstance();
 
     public List<Topic> getTopicsSortedBy(String sort, int page, int pageSize) {

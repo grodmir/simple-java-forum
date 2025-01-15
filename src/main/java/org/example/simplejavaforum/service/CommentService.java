@@ -1,7 +1,7 @@
 package org.example.simplejavaforum.service;
 
-import org.example.simplejavaforum.repository.CommentRepository;
 import org.example.simplejavaforum.model.Comment;
+import org.example.simplejavaforum.repository.CommentRepository;
 
 import java.util.List;
 

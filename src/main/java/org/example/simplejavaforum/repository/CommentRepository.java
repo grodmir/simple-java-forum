@@ -4,22 +4,25 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.simplejavaforum.model.Comment;
 import org.example.simplejavaforum.util.HibernateUtil;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 import java.util.List;
 
 @Slf4j
-public class CommentRepository {
-
+public class CommentRepository extends AbstractHibernateRepository<Comment> implements CommentRepositoryInterface {
     private static CommentRepository instance;
 
-    public static synchronized CommentRepository getInstance() {
+    public CommentRepository() {
+        super(Comment.class);
+    }
+
+    public static CommentRepository getInstance() {
         if (instance == null) {
             instance = new CommentRepository();
         }
         return instance;
     }
 
+    @Override
     public Comment findById(Long id) {
         try (Session session = HibernateUtil.getInstance().getSessionFactory().openSession()) {
             return session.createQuery(
@@ -33,6 +36,7 @@ public class CommentRepository {
         }
     }
 
+    @Override
     public List<Comment> findAll() {
         try (Session session = HibernateUtil.getInstance().getSessionFactory().openSession()) {
             return session.createQuery(
@@ -45,6 +49,7 @@ public class CommentRepository {
         }
     }
 
+    @Override
     public List<Comment> findByTopicId(Long topicId) {
         try (Session session = HibernateUtil.getInstance().getSessionFactory().openSession()) {
             return session.createQuery(
@@ -58,6 +63,7 @@ public class CommentRepository {
         }
     }
 
+    @Override
     public List<Comment> findByAuthorId(Long authorId) {
         try (Session session = HibernateUtil.getInstance().getSessionFactory().openSession()) {
             return session.createQuery(
@@ -68,46 +74,6 @@ public class CommentRepository {
         } catch (Exception e) {
             log.error("Error finding comments by author ID: {}", authorId, e);
             throw e;
-        }
-    }
-
-    public void save(Comment comment) {
-        Transaction transaction = null;
-        try (Session session = HibernateUtil.getInstance().getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-            if (comment.getId() == null) {
-                session.persist(comment);
-                log.info("Comment created: {}", comment);
-            } else {
-                session.merge(comment);
-                log.info("Comment updated: {}", comment);
-            }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            log.error("Error saving comment: {}", comment, e);
-        }
-    }
-
-    public void delete(Long id) {
-        Transaction transaction = null;
-        try (Session session = HibernateUtil.getInstance().getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-            Comment comment = session.get(Comment.class, id);
-            if (comment != null) {
-                session.remove(comment);
-                log.info("Comment deleted: {}", comment);
-            } else {
-                log.warn("Comment not found: {}", id);
-            }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            log.error("Error deleting comment: {}", id, e);
         }
     }
 }
